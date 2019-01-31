@@ -7,7 +7,7 @@ RUN usermod -u 999 www-data && \
 
 # Utilities
 RUN apt-get update && \
-    apt-get -y install apt-transport-https ca-certificates git curl --no-install-recommends && \
+    apt-get -y install apt-transport-https ca-certificates git curl --no-install-recommends wget sudo vim grep mlocate && \
     rm -r /var/lib/apt/lists/*
 
 # MySQL PHP extension
@@ -31,6 +31,13 @@ RUN apt-get update && apt-get install -y libicu-dev g++ --no-install-recommends 
     docker-php-ext-install intl && \
     apt-get install -y --auto-remove libicu52 g++ && \
     rm -rf /var/lib/apt/lists/*
+
+# XHProf
+RUN git clone https://github.com/longxinH/xhprof ~ && \
+    cd ~/xhprof/extension && \
+    phpize && \
+    ./configure --with-php-config=/usr/local/bin/php-config && \
+    sudo make && sudo make test && sudo make install
 
 # APC PHP extension
 RUN pecl install apcu && \
